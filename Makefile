@@ -1,16 +1,28 @@
 all:
 	@docker compose -f ./srcs/docker-compose.yml up -d --build
 
+up:
+	@docker compose -f ./srcs/docker-compose.yml up -d 
+
+status:
+	@docker ps
+
+stoped:
+	@docker ps -a
+
+wp:
+	@docker logs wordpress
+nginx:
+	@docker logs nginx
+msb:
+	@docker logs mariadb
+
 down:
 	@docker compose -f ./srcs/docker-compose.yml down
 
-clean:
+clean: down
+	@docker system prune -af
 	@rm -rf /home/manugonz/data/mariadb/*
 	@rm -rf /home/manugonz/data/wordpress/*
-	@docker stop $$(docker ps -qa)
-	@docker rm $$(docker ps -qa)
-	@docker rmi $$(docker images -qa)
-	@docker volume rm $$(docker volume ls -q)
-	@docker network rm inception_net
 
-.PHONY: all down clean
+.PHONY: all up status stoped wp mdb nginx down clean
